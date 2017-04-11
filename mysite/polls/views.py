@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import loader
-
 from django.http import Http404
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from .models import Question, Choice
+from polls.models import Document
+from polls.forms import DocumentForm
 
 
 class IndexView(generic.ListView):
@@ -56,6 +57,26 @@ def vote(request, question_id):
              # user hits the Back button.
              return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
+def list(request):
+    # Handle file upload
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            newdoc = Document(docfile=request.FILES['docfile'])
+            newdoc.save()
 
+            # Redirect to the document list after POST
+            return HttpResponseRedirect(reverse('list'))
+    else:
+        form = DocumentForm()  # A empty, unbound form
 
-        
+    # Load documents for the list page
+    documents = Document.objects.all()
+
+    # Render list page with the documents and the form
+    return render(
+        request,
+        'list.html',
+        {'documents': documents, 'form': form}
+    )
+

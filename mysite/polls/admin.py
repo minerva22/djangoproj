@@ -1,6 +1,9 @@
 from django.contrib import admin
 
 from .models import Question,Choice
+#added for upload files
+from polls.models import Document
+
 
 #class QuestionAdmin(admin.ModelAdmin):
  #   fields = ['pub_date', 'question_text']
@@ -25,4 +28,7 @@ class QuestionAdmin(admin.ModelAdmin):
 admin.site.register(Question, QuestionAdmin)
 
      
-#admin.site.register(Choice)
+admin.site.register(Choice)
+
+#added for upload files
+admin.site.register(Document)
